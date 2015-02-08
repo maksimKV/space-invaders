@@ -29,11 +29,11 @@ var Ship = new Class ({
 	},
 
 	moveLeft: function(){
-		return this.options.left = this.options.left - 5;
+		return this.options.left -= 5;
 	},
 
 	moveRight: function(){
-		return this.options.left = this.options.left + 5;
+		return this.options.left += 5;
 	},
 
 	fireMissile: function(){
@@ -41,16 +41,41 @@ var Ship = new Class ({
 	},
 });
 
-var user = new Ship;
+var Alien = new Class({
+	Extends: Ship,
+	Implements: [Options],
+	options: {
+		image: "./img/alien-2.png",
+		height: 60,
+		width: 60,
+		left: 0,
+		bottom: 0,
+		'class': "alien",
+		id: "scout",
+		points: 12,
+	},
 
-//$('game').setAttribute("tabindex", 0);
+	initialize : function(options) {
+		this.setOptions(options);
 
-// The movement functionality for the user ship
-$('game').addEvent('keydown', function(event){
-	if(event.key == 'left' && user.options.left > 0){
-		$('user').setStyle('left', user.moveLeft());
-	} else if(event.key == 'right' && user.options.left < 1000){
-		$('user').setStyle('left', user.moveRight());
-	}
-	return false;
-});
+		var ship_image = new Element('img', {
+			src: this.options.image,
+			'class': this.options.class,
+			id: this.options.id,
+			styles: {
+				position: "absolute",
+				display: "block",
+				bottom: this.options.bottom,
+				left: this.options.left,
+				width: this.options.width,
+				height: this.options.height,
+			},
+		});
+
+		ship_image.inject(game);
+	},
+
+	moveDown: function(){
+		return this.options.bottom -= 10;
+	},
+})
