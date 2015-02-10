@@ -3,13 +3,15 @@ var Bomb = new Class({
 	options: {
 		left: 0,
 		bottom: 0,
+		id: 'bomb',
 	},
 
 	initialize : function(options) {
 		this.setOptions(options);
 
 		var bomb_html = new Element('div', {
-			'class': 'bomb',
+			'class': 'bombs',
+			'id': this.options.id,
 			styles: {
 				position: "absolute",
 				display: "block",
@@ -23,6 +25,10 @@ var Bomb = new Class({
 
 		bomb_html.inject(game);
 	},
+
+	moveDown: function(){
+		return this.options.bottom -= 20;
+	},
 });
 
 var Missile = new Class({
@@ -31,19 +37,21 @@ var Missile = new Class({
 	options: {
 		left: 0,
 		bottom: 0,
+		id: 'missile',
 	},
 
 	initialize : function(options) {
 		this.setOptions(options);
 
 		var missile_html = new Element('div', {
-			'class': 'missile',
+			'class': 'missiles',
+			'id': this.options.id,
 			styles: {
 				position: "absolute",
 				display: "block",
 				bottom: this.options.bottom,
 				left: this.options.left,
-				width: 4,
+				width: 2,
 				height: 10,
 				'background-color': '#00F',
 			},
@@ -52,7 +60,7 @@ var Missile = new Class({
 		missile_html.inject(game);
 	},
 
-	moveDown: function(){
-		return this.options.bottom -= 5;
-	},
+	moveUp: function(){
+		return this.options.bottom += 20;
+	}
 });

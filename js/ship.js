@@ -35,10 +35,6 @@ var Ship = new Class ({
 	moveRight: function(){
 		return this.options.left += 5;
 	},
-
-	fireMissile: function(){
-
-	},
 });
 
 var Alien = new Class({
@@ -50,7 +46,6 @@ var Alien = new Class({
 		width: 60,
 		left: 0,
 		bottom: 0,
-		'class': "alien",
 		id: "scout",
 		points: 12,
 	},
@@ -60,7 +55,7 @@ var Alien = new Class({
 
 		var ship_image = new Element('img', {
 			src: this.options.image,
-			'class': this.options.class,
+			'class': 'alien',
 			id: this.options.id,
 			styles: {
 				position: "absolute",
