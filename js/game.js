@@ -66,6 +66,7 @@ function beginGame(){
 /* Start of the game sequence functionality */
 var direction = 'right';
 var highest = 0;
+var lowest = 1000;
 function startGame() {
 
 	// User has won
@@ -96,6 +97,8 @@ function startGame() {
 
 				// Moving down the enemies
 				Array.each($$('.alien'), function(class_img){
+					checkLowest(class_img);
+
 					Object.each(aliens, function(alien_class){
 						if(class_img.get('id') == alien_class.options.id){
 							class_img.setStyle('bottom', alien_class.moveDown());
@@ -123,6 +126,8 @@ function startGame() {
 
 				// Moving down the enemies
 				Array.each($$('.alien'), function(class_img){
+					checkLowest(class_img);
+					
 					Object.each(aliens, function(alien_class){
 						if(class_img.get('id') == alien_class.options.id){
 							class_img.setStyle('bottom', alien_class.moveDown());
@@ -237,3 +242,17 @@ function stopGame(condition){
 	delete user;
 }
 /* End of stop functionality */
+
+/* Start of aliens bottom position check */
+function checkLowest(html_element){
+	// Getting the position of the element closest to the bottom
+	if(html_element.getStyle('bottom').toInt() < lowest){
+		lowest = html_element.getStyle('bottom').toInt();
+	}
+
+	if(lowest <= 105){
+		stopGame('lose');
+		return false;
+	}
+}
+/* End of aliens bottom position check */

@@ -71,6 +71,6 @@ var Alien = new Class({
 	},
 
 	moveDown: function(){
-		return this.options.bottom -= 10;
+		return this.options.bottom -= 120;
 	},
 })
