@@ -1,5 +1,6 @@
 level = 1;
 lives = 3;
+score = 0;
 
 switch(true){
 	case(level == 2):
