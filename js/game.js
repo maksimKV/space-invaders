@@ -1,42 +1,4 @@
-var user = new Ship;
-
-// Populating the aliens
-var alien_left = 140;
-var aliens = {};
-for(i=0; i<10; i++){
-	alien_left += 60;
-
-	aliens["alien_scout" + i] = new Alien({
-		left: alien_left,
-		bottom: 405,
-		id: 'scout' + i,
-	});
-
-	aliens["alien_fighter" + i] = new Alien({
-		left: alien_left,
-		bottom: 465,
-		image: "./img/alien-1.png",
-		height: 84,
-		id: "fighter" + i,
-		points: 18,
-	});
-
-	aliens["alien_bomber" + i] = new Alien({
-		left: alien_left,
-		bottom: 551,
-		image: "./img/alien-3.png",
-		height: 79,
-		id: "bomber" + i,
-		points: 26,
-	});
-}
-
-//$('game').setAttribute("tabindex", 0);
-
-var missiles = {};
-missile_count = 0;
-
-// The movement functionality for the user ship
+/* Start of key detection */
 $(document.body).addEvent('keydown', function(event){
 	if(event.key == 'left' && user.options.left > 0){
 		$('user').setStyle('left', user.moveLeft());
@@ -50,16 +12,68 @@ $(document.body).addEvent('keydown', function(event){
 			id: "missile" + missile_count,
 		});
 		missile_count++;
+	} else if(event.key == 'enter' && !$('user')){
+		beginGame();
 	}
 
 	return false;
 });
+/* End of key detection */
 
+/* Start assemble functionality */
+function beginGame(){
+	user = new Ship;
 
-// The game functionality
+	// Populating the aliens
+	alien_left = 140;
+	aliens = {};
+	for(i=0; i<10; i++){
+		alien_left += 60;
+
+		aliens["alien_scout" + i] = new Alien({
+			left: alien_left,
+			bottom: 405,
+			id: 'alien_scout' + i,
+		});
+
+		aliens["alien_fighter" + i] = new Alien({
+			left: alien_left,
+			bottom: 465,
+			image: "./img/alien-1.png",
+			height: 84,
+			id: "alien_fighter" + i,
+			points: 18,
+		});
+
+		aliens["alien_bomber" + i] = new Alien({
+			left: alien_left,
+			bottom: 551,
+			image: "./img/alien-3.png",
+			height: 79,
+			id: "alien_bomber" + i,
+			points: 26,
+		});
+	}
+
+	// Starts the game sequence interval
+	start = startGame.periodical(game_speed);
+
+	// Starts the bombing interval
+	bombing = dropBomb.periodical(drop_rate);
+};
+/* End assemble functionality */
+
+/* Start of the game sequence functionality */
 var direction = 'right';
 var highest = 0;
 function startGame() {
+
+	// User has won
+	if(Object.getLength(aliens) <= 0){
+		stopGame('win');
+		return false;
+	}
+
 	checkBombs();
 	checkMissiles();
 
@@ -118,14 +132,10 @@ function startGame() {
 			}
 		});
 	}
-}; 
+};
+/* End of the game sequence functionality */
 
-// Creates the game interval
-var start = startGame.periodical(600);
-//clearInterval(start);
-
-
- /* Bombing functionality */
+/* Start of bombing functionality */
 var bombs = {};
 var bomb_count = 0;
 function dropBomb() {
@@ -140,8 +150,6 @@ function dropBomb() {
 
 	bomb_count++;
 };
-var bombing = dropBomb.periodical(10000);
-/* End of bombing */
 
 function checkBombs(){
 	Array.each($$('.bombs'), function(bomb_html){
@@ -149,14 +157,8 @@ function checkBombs(){
 		var bomb_left = bomb_html.getStyle('left').toInt();
 
 		if(bomb_html.getStyle('bottom').toInt() <= 80 && bomb_left >= user_left && bomb_left <= user_left + 103){
-			//bomb_html.dispose();
-			//$('user').dispose();
-
-			//delete bombs[bomb_html.get('id')];
-			//delete user;
-
-			clearInterval(start);
-			clearInterval(bombing);
+			stopGame('lose');
+			return false;
 		}
 
 		Object.each(bombs, function(bombs_class){
@@ -171,7 +173,11 @@ function checkBombs(){
 		});
 	});
 };
+/* End of bombing functionality */
 
+/* Start of missiles functionality */
+var missiles = {};
+missile_count = 0;
 function checkMissiles(){
 	Array.each($$('.missiles'), function(missiles_html){
 		Array.each($$('.alien'), function(alien_html){
@@ -183,10 +189,9 @@ function checkMissiles(){
 			var missile_left = missiles_html.getStyle('left').toInt();
 			if(missile_bottom >= alien_bottom && missile_bottom <= alien_bottom + alien_height && 
 				missile_left >= alien_left && missile_left <= alien_left + 59){
+				
 				alien_html.dispose();
 				delete aliens[alien_html.get('id')];
-
-				console.log('impact');
 
 				missiles_html.dispose();
 				delete missiles[missiles_html.get('id')];
@@ -205,3 +210,30 @@ function checkMissiles(){
 		});
 	});
 }
+/* End of missiles functionality */
+
+/* Start of stop functionality */
+function stopGame(condition){
+	if(condition == 'win'){
+		level++;
+		console.log('you have won');
+	} else if (condition == 'lose'){
+		lives--;
+	}
+
+	clearInterval(start);
+	clearInterval(bombing);
+
+	$$('.bombs').dispose();
+	delete bombs;
+
+	$$('.missiles').dispose();
+	delete missiles;
+
+	$$('.alien').dispose();
+	delete aliens;
+
+	$('user').dispose();
+	delete user;
+}
+/* End of stop functionality */
