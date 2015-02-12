@@ -10,6 +10,21 @@ html, body {
 	position: relative;
 }
 
+#info {
+	position: relative;
+	display: block;
+
+	p {
+		position: relative;
+		display: block;
+
+		color: #D3D3D3;
+		float: left;
+
+		margin: 0px 0px 0px 20px;
+	}
+}
+
 #game {
 	position: relative;
 	display: block;
@@ -19,4 +34,27 @@ html, body {
 
 	border: 1px solid white;
 	margin: 0 auto;
+
+	#message_title {
+		color: #fff;
+		text-align: center;
+
+		position: relative;
+		display: block;
+
+		margin: 200px 0px 0px 0px;
+		font-size: 64px;
+	}
+
+	#message_subtitle {
+		color: #fff;
+		text-align: center;
+
+		position: relative;
+		display: block;
+
+		margin: 0px;
+		font-style: italic;
+		font-size: 22px;
+	}
 }

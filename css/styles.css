@@ -10,6 +10,20 @@ html, body {
 }
 
 /* line 13, ../scss/styles.scss */
+#info {
+  position: relative;
+  display: block;
+}
+/* line 17, ../scss/styles.scss */
+#info p {
+  position: relative;
+  display: block;
+  color: #D3D3D3;
+  float: left;
+  margin: 0px 0px 0px 20px;
+}
+
+/* line 28, ../scss/styles.scss */
 #game {
   position: relative;
   display: block;
@@ -17,4 +31,23 @@ html, body {
   height: 650px;
   border: 1px solid white;
   margin: 0 auto;
+}
+/* line 38, ../scss/styles.scss */
+#game #message_title {
+  color: #fff;
+  text-align: center;
+  position: relative;
+  display: block;
+  margin: 200px 0px 0px 0px;
+  font-size: 64px;
+}
+/* line 49, ../scss/styles.scss */
+#game #message_subtitle {
+  color: #fff;
+  text-align: center;
+  position: relative;
+  display: block;
+  margin: 0px;
+  font-style: italic;
+  font-size: 22px;
 }

@@ -1,6 +1,7 @@
 level = 1;
 lives = 3;
 score = 0;
+power = 'Basic';
 
 switch(true){
 	case(level == 2):

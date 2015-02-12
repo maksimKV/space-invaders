@@ -1,3 +1,6 @@
+displayMessage();
+insertInfo();
+
 /* Start of key detection */
 $(document.body).addEvent('keydown', function(event){
 	if(event.key == 'left' && user.options.left > 0){
@@ -12,7 +15,8 @@ $(document.body).addEvent('keydown', function(event){
 			id: "missile" + missile_count,
 		});
 		missile_count++;
-	} else if(event.key == 'enter' && !$('user')){
+	} else if(event.key == 'enter' && !$('user') && level < 11 && lives > 0){
+		removeMessage();
 		beginGame();
 	}
 
@@ -127,7 +131,7 @@ function startGame() {
 				// Moving down the enemies
 				Array.each($$('.alien'), function(class_img){
 					checkLowest(class_img);
-					
+
 					Object.each(aliens, function(alien_class){
 						if(class_img.get('id') == alien_class.options.id){
 							class_img.setStyle('bottom', alien_class.moveDown());
@@ -194,6 +198,9 @@ function checkMissiles(){
 			var missile_left = missiles_html.getStyle('left').toInt();
 			if(missile_bottom >= alien_bottom && missile_bottom <= alien_bottom + alien_height && 
 				missile_left >= alien_left && missile_left <= alien_left + 59){
+
+				score += aliens[alien_html.get('id')].options.points;
+				insertInfo();
 				
 				alien_html.dispose();
 				delete aliens[alien_html.get('id')];
@@ -221,7 +228,6 @@ function checkMissiles(){
 function stopGame(condition){
 	if(condition == 'win'){
 		level++;
-		console.log('you have won');
 	} else if (condition == 'lose'){
 		lives--;
 	}
@@ -230,16 +236,22 @@ function stopGame(condition){
 	clearInterval(bombing);
 
 	$$('.bombs').dispose();
-	delete bombs;
+	//delete bombs;
+	bombs = {};
 
 	$$('.missiles').dispose();
-	delete missiles;
+	//delete missiles;
+	missiles = {};
 
 	$$('.alien').dispose();
-	delete aliens;
+	//delete aliens;
+	aliens = {};
 
 	$('user').dispose();
 	delete user;
+
+	insertInfo();
+	displayMessage();
 }
 /* End of stop functionality */
 
@@ -256,3 +268,56 @@ function checkLowest(html_element){
 	}
 }
 /* End of aliens bottom position check */
+
+/* Start of message functionality */
+function displayMessage(){
+	if (level < 11 && lives > 0) {
+		var title = new Element('h2', {
+			id: 'message_title',
+			text: 'Level ' + level,
+		});
+
+		var subtitle = new Element ('p', {
+			id: 'message_subtitle',
+			text: 'Press Enter to start',
+		});
+	} else if(level > 10) {
+		var title = new Element('h2', {
+			id: 'message_title',
+			text: 'Victory',
+		});
+
+		var subtitle = new Element ('p', {
+			id: 'message_subtitle',
+			text: 'Well done! Refresh to play again',
+		});
+	} else if(lives < 1){
+		var title = new Element('h2', {
+			id: 'message_title',
+			text: 'Defeat',
+		});
+
+		var subtitle = new Element ('p', {
+			id: 'message_subtitle',
+			text: 'Refresh to try again',
+		});
+	}
+
+	title.inject(game);
+	subtitle.inject(game);
+}
+
+function removeMessage(){
+	$('message_title').dispose();
+	$('message_subtitle').dispose();
+}
+/* End of message functionality */
+
+/* Start of game info functionality */
+function insertInfo(){
+	$('level').set('text', 'Level: ' + level);
+	$('lives').set('text', 'Lives: ' + lives);
+	$('power').set('text', 'Power: ' + power);
+	$('score').set('text', 'Score: ' + score);
+}
+/* End of game info functionality */
