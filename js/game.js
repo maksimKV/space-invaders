@@ -7,14 +7,9 @@ $(document.body).addEvent('keydown', function(event){
 		$('user').setStyle('left', user.moveLeft());
 	} else if(event.key == 'right' && user.options.left < 895){
 		$('user').setStyle('left', user.moveRight());
-	} else if(event.key == 'space' && Object.getLength(missiles) < 10) {
+	} else if(event.key == 'space') {
+		fireMissile();
 
-		missiles["missile" + missile_count] = new Missile({
-			left: $('user').getStyle('left').toInt() + 50,
-			bottom: $('user').getStyle('bottom').toInt() + 84,
-			id: "missile" + missile_count,
-		});
-		missile_count++;
 	} else if(event.key == 'enter' && !$('user') && level < 11 && lives > 0){
 		removeMessage();
 		beginGame();
@@ -81,6 +76,7 @@ function startGame() {
 
 	checkBombs();
 	checkMissiles();
+	checkGifts();
 
 	if(direction == 'right'){
 		Array.each($$('.alien'), function(class_img){
@@ -127,16 +123,13 @@ function startGame() {
 			// Changing direction
 			if(highest == 0){
 				direction = 'right';
+				checkLowest(class_img);
 
 				// Moving down the enemies
-				Array.each($$('.alien'), function(class_img){
-					checkLowest(class_img);
-
-					Object.each(aliens, function(alien_class){
-						if(class_img.get('id') == alien_class.options.id){
-							class_img.setStyle('bottom', alien_class.moveDown());
-						}
-					});
+				Object.each(aliens, function(alien_class){
+					if(class_img.get('id') == alien_class.options.id){
+						class_img.setStyle('bottom', alien_class.moveDown());
+					}
 				});
 			}
 		});
@@ -187,6 +180,59 @@ function checkBombs(){
 /* Start of missiles functionality */
 var missiles = {};
 missile_count = 0;
+
+function fireMissile(){
+	if (power == "Basic"){
+		missiles["missile" + missile_count] = new Missile({
+				left: $('user').getStyle('left').toInt() + 50,
+				bottom: $('user').getStyle('bottom').toInt() + 84,
+				id: "missile" + missile_count,
+		});
+		missile_count++;
+
+	}else if(power == "Intermediate"){
+		missiles["missile" + missile_count] = new Missile({
+				left: $('user').getStyle('left').toInt() + 32,
+				bottom: $('user').getStyle('bottom').toInt() + 84,
+				id: "missile" + missile_count,
+		});
+
+		missiles["missile" + missile_count + 1] = new Missile({
+				left: $('user').getStyle('left').toInt() + 70,
+				bottom: $('user').getStyle('bottom').toInt() + 84,
+				id: "missile" + missile_count + 1,
+		});
+
+		missile_count += 2;
+	} else if(power == "Advanced"){
+		missiles["missile" + missile_count] = new Missile({
+				left: $('user').getStyle('left').toInt() + 6,
+				bottom: $('user').getStyle('bottom').toInt() + 34,
+				id: "missile" + missile_count,
+		});
+
+		missiles["missile" + missile_count + 1] = new Missile({
+				left: $('user').getStyle('left').toInt() + 32,
+				bottom: $('user').getStyle('bottom').toInt() + 84,
+				id: "missile" + missile_count + 1,
+		});
+
+		missiles["missile" + missile_count + 2] = new Missile({
+				left: $('user').getStyle('left').toInt() + 70,
+				bottom: $('user').getStyle('bottom').toInt() + 84,
+				id: "missile" + missile_count + 2,
+		});
+
+		missiles["missile" + missile_count + 3] = new Missile({
+				left: $('user').getStyle('left').toInt() + 95,
+				bottom: $('user').getStyle('bottom').toInt() + 34,
+				id: "missile" + missile_count + 3,
+		});
+
+		missile_count += 4;
+	}
+}
+
 function checkMissiles(){
 	Array.each($$('.missiles'), function(missiles_html){
 		Array.each($$('.alien'), function(alien_html){
@@ -201,6 +247,9 @@ function checkMissiles(){
 
 				score += aliens[alien_html.get('id')].options.points;
 				insertInfo();
+
+				// Trigers the gifts chance
+				dropGift(alien_left, alien_bottom);
 				
 				alien_html.dispose();
 				delete aliens[alien_html.get('id')];
@@ -230,25 +279,30 @@ function stopGame(condition){
 		level++;
 	} else if (condition == 'lose'){
 		lives--;
+		if(power == 'Advanced'){
+			power == 'Intermediate';
+		} else if(power == 'Intermediate'){
+			power = 'Basic';
+		}
 	}
 
 	clearInterval(start);
 	clearInterval(bombing);
 
 	$$('.bombs').dispose();
-	//delete bombs;
 	bombs = {};
 
 	$$('.missiles').dispose();
-	//delete missiles;
 	missiles = {};
 
 	$$('.alien').dispose();
-	//delete aliens;
 	aliens = {};
 
 	$('user').dispose();
 	delete user;
+
+	$$('.gifts').dispose;
+	gifts = {};
 
 	insertInfo();
 	displayMessage();
@@ -321,3 +375,68 @@ function insertInfo(){
 	$('score').set('text', 'Score: ' + score);
 }
 /* End of game info functionality */
+
+/* Start of gifts functionality */
+var gifts = {};
+var gift_number = 1;
+function dropGift(left, bottom){
+	var top_value = 50;
+	var random = Math.floor((Math.random() * top_value) + 1);
+
+	// There is a 2% chance that the user will recieve a gift
+	if(random == 11 && lives < 6){
+		gifts['live' + gift_number] = new Gift({
+			left: left,
+			bottom: bottom,
+			id: 'live' + gift_number,
+		});
+
+		gift_number++;
+	} else if(random == 33 && power != "Advanced"){
+		gifts['power' + gift_number] = new Gift({
+			left: left,
+			bottom: bottom,
+			id: 'power' + gift_number,
+			type: 'power',
+			image: './img/power.png',
+		});
+
+		gift_number++;
+	}
+}
+
+function checkGifts(){
+	Array.each($$('.gifts'), function(gift_html){
+		var user_left = $('user').getStyle('left').toInt();
+		var gift_left = gift_html.getStyle('left').toInt();
+
+		var gift_object = gifts[gift_html.get('id')];
+
+		if(gift_html.getStyle('bottom').toInt() <= 80 && gift_left >= user_left && gift_left <= user_left + 103){
+			
+			if(gift_object.options.type == 'live' && lives < 6){
+				lives++;
+				insertInfo();
+
+			} else if(gift_object.options.type == 'power'){
+				if(power == 'Intermediate'){ power = 'Advanced'; } else if(power == 'Basic') { power = 'Intermediate'; }
+				insertInfo();
+			}
+
+			gift_html.dispose();
+			delete gifts[gift_html.get('id')];
+
+			return false;		
+		}
+
+		if(gift_html.getStyle('bottom').toInt() <= 10){
+			gift_html.dispose();
+			delete gifts[gift_html.get('id')];
+
+			return false;
+		}
+
+		gift_html.setStyle('bottom', gift_object.moveDown());
+	});
+}
+/* End of gifts functionality */
