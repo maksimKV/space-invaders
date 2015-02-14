@@ -8,7 +8,15 @@ $(document.body).addEvent('keydown', function(event){
 	} else if(event.key == 'right' && user.options.left < 895){
 		$('user').setStyle('left', user.moveRight());
 	} else if(event.key == 'space') {
-		fireMissile();
+		
+		// The user can only shoot 10 times
+		if(power == 'Basic' && Object.getLength(missiles) < 10){
+			fireMissile();
+		} else if (power == 'Intermediate' && Object.getLength(missiles) < 20){
+			fireMissile();
+		} else if (power == 'Advanced' && Object.getLength(missiles) < 40){
+			fireMissile();
+		}
 
 	} else if(event.key == 'enter' && !$('user') && level < 11 && lives > 0){
 		removeMessage();
