@@ -8,11 +8,16 @@ html, body {
 	background: #333;
 	display: block;
 	position: relative;
+
+	background-image: url('../img/stars.jpg');
+	background-repeat: repeat;
 }
 
 #info {
 	position: relative;
 	display: block;
+
+	min-height: 20px;
 
 	p {
 		position: relative;
@@ -21,7 +26,7 @@ html, body {
 		color: #D3D3D3;
 		float: left;
 
-		margin: 0px 0px 0px 20px;
+		margin: 10px 0px 0px 20px;
 	}
 }
 
@@ -32,7 +37,7 @@ html, body {
 	width: 1000px;
 	height: 650px;
 
-	border: 1px solid white;
+	//border: 1px solid white;
 	margin: 0 auto;
 
 	#message_title {

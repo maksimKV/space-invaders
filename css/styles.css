@@ -7,32 +7,34 @@ html, body {
   background: #333;
   display: block;
   position: relative;
+  background-image: url("../img/stars.jpg");
+  background-repeat: repeat;
 }
 
-/* line 13, ../scss/styles.scss */
+/* line 16, ../scss/styles.scss */
 #info {
   position: relative;
   display: block;
+  min-height: 20px;
 }
-/* line 17, ../scss/styles.scss */
+/* line 22, ../scss/styles.scss */
 #info p {
   position: relative;
   display: block;
   color: #D3D3D3;
   float: left;
-  margin: 0px 0px 0px 20px;
+  margin: 10px 0px 0px 20px;
 }
 
-/* line 28, ../scss/styles.scss */
+/* line 33, ../scss/styles.scss */
 #game {
   position: relative;
   display: block;
   width: 1000px;
   height: 650px;
-  border: 1px solid white;
   margin: 0 auto;
 }
-/* line 38, ../scss/styles.scss */
+/* line 43, ../scss/styles.scss */
 #game #message_title {
   color: #fff;
   text-align: center;
@@ -41,7 +43,7 @@ html, body {
   margin: 200px 0px 0px 0px;
   font-size: 64px;
 }
-/* line 49, ../scss/styles.scss */
+/* line 54, ../scss/styles.scss */
 #game #message_subtitle {
   color: #fff;
   text-align: center;
