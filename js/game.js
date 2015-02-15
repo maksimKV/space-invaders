@@ -2,6 +2,7 @@ displayMessage();
 insertInfo();
 
 /* Start of key detection */
+var key_down;
 $(document.body).addEvent('keydown', function(event){
 	if(event.key == 'left' && user.options.left > 0){
 		var old_position = $('user').getStyle('left');
@@ -13,16 +14,9 @@ $(document.body).addEvent('keydown', function(event){
 		//$('user').setStyle('left', user.moveRight());
 		var new_position = user.moveRight();
 		addEffect($('user'), 'right', old_position, new_position);
-	} else if(event.key == 'space') {
-		
-		// The user can only shoot 10 times
-		if(power == 'Basic' && Object.getLength(missiles) < 10){
-			fireMissile();
-		} else if (power == 'Intermediate' && Object.getLength(missiles) < 20){
-			fireMissile();
-		} else if (power == 'Advanced' && Object.getLength(missiles) < 40){
-			fireMissile();
-		}
+	} else if(event.key == 'space' && key_down != 'space') {
+		fireMissile();
+		key_down = event.key;
 
 	} else if(event.key == 'enter' && !$('user') && level < 11 && lives > 0){
 		removeMessage();
@@ -31,6 +25,9 @@ $(document.body).addEvent('keydown', function(event){
 
 	return false;
 });
+
+function allowSpace(){ return key_down = null; };
+var allow_fire = allowSpace.periodical(800); // Limit the missile launch to 800ms
 /* End of key detection */
 
 /* Start assemble functionality */
