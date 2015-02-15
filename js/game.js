@@ -3,7 +3,7 @@ insertInfo();
 
 /* Start of key detection */
 $(document.body).addEvent('keydown', function(event){
-	if(event.key == 'left' && user.options.left > 0 &&){
+	if(event.key == 'left' && user.options.left > 0){
 		var old_position = $('user').getStyle('left');
 		//$('user').setStyle('left', user.moveLeft());
 		var new_position = user.moveLeft();
