@@ -3,10 +3,16 @@ insertInfo();
 
 /* Start of key detection */
 $(document.body).addEvent('keydown', function(event){
-	if(event.key == 'left' && user.options.left > 0){
-		$('user').setStyle('left', user.moveLeft());
+	if(event.key == 'left' && user.options.left > 0 &&){
+		var old_position = $('user').getStyle('left');
+		//$('user').setStyle('left', user.moveLeft());
+		var new_position = user.moveLeft();
+		addEffect($('user'), 'left', old_position, new_position);
 	} else if(event.key == 'right' && user.options.left < 895){
-		$('user').setStyle('left', user.moveRight());
+		var old_position = $('user').getStyle('left');
+		//$('user').setStyle('left', user.moveRight());
+		var new_position = user.moveRight();
+		addEffect($('user'), 'right', old_position, new_position);
 	} else if(event.key == 'space') {
 		
 		// The user can only shoot 10 times
@@ -29,6 +35,8 @@ $(document.body).addEvent('keydown', function(event){
 
 /* Start assemble functionality */
 function beginGame(){
+	resetConfig();
+
 	user = new Ship;
 
 	// Populating the aliens
@@ -41,6 +49,8 @@ function beginGame(){
 			left: alien_left,
 			bottom: 405,
 			id: 'alien_scout' + i,
+			speed: speed,
+			drop_speed: drop_speed,
 		});
 
 		aliens["alien_fighter" + i] = new Alien({
@@ -50,6 +60,8 @@ function beginGame(){
 			height: 84,
 			id: "alien_fighter" + i,
 			points: 18,
+			speed: speed,
+			drop_speed: drop_speed,
 		});
 
 		aliens["alien_bomber" + i] = new Alien({
@@ -59,6 +71,8 @@ function beginGame(){
 			height: 79,
 			id: "alien_bomber" + i,
 			points: 26,
+			speed: speed,
+			drop_speed: drop_speed,
 		});
 	}
 
@@ -90,7 +104,10 @@ function startGame() {
 		Array.each($$('.alien'), function(class_img){
 			Object.each(aliens, function(alien_class){
 				if(class_img.get('id') == alien_class.options.id){
-					class_img.setStyle('left', alien_class.moveRight());
+					var old_position = class_img.getStyle('left');
+					//class_img.setStyle('left', alien_class.moveRight());
+					var new_position = alien_class.moveRight();
+					addEffect(class_img, direction, old_position, new_position);
 				}
 			});
 
@@ -100,7 +117,7 @@ function startGame() {
 			}
 
 			// Changing direction
-			if(highest == 940){
+			if(highest >= 940){
 				direction = 'left';
 
 				// Moving down the enemies
@@ -109,7 +126,10 @@ function startGame() {
 
 					Object.each(aliens, function(alien_class){
 						if(class_img.get('id') == alien_class.options.id){
-							class_img.setStyle('bottom', alien_class.moveDown());
+							var old_position = class_img.getStyle('bottom');
+							//class_img.setStyle('bottom', alien_class.moveDown());
+							var new_position = alien_class.moveDown();
+							addEffect(class_img, 'down', old_position, new_position);
 						}
 					});
 				});
@@ -119,7 +139,10 @@ function startGame() {
 		Array.each($$('.alien'), function(class_img){
 			Object.each(aliens, function(alien_class){
 				if(class_img.get('id') == alien_class.options.id){
-					class_img.setStyle('left', alien_class.moveLeft());
+					var old_position = class_img.getStyle('left');
+					//class_img.setStyle('left', alien_class.moveLeft());
+					var new_position = alien_class.moveLeft();
+					addEffect(class_img, direction, old_position, new_position);
 				}
 			});
 
@@ -129,14 +152,17 @@ function startGame() {
 			}
 
 			// Changing direction
-			if(highest == 0){
+			if(highest <= 0){
 				direction = 'right';
 				checkLowest(class_img);
 
 				// Moving down the enemies
 				Object.each(aliens, function(alien_class){
 					if(class_img.get('id') == alien_class.options.id){
-						class_img.setStyle('bottom', alien_class.moveDown());
+						var old_position = class_img.getStyle('bottom');
+						//class_img.setStyle('bottom', alien_class.moveDown());
+						var new_position = alien_class.moveDown();
+						addEffect(class_img, 'down', old_position, new_position);
 					}
 				});
 			}
@@ -156,6 +182,7 @@ function dropBomb() {
 		left: random_alien.getStyle('left').toInt(),
 		bottom: random_alien.getStyle('bottom').toInt(),
 		id: "bomb" + bomb_count,
+		speed: drop_speed,
 	});
 
 	bomb_count++;
@@ -178,7 +205,10 @@ function checkBombs(){
 			}
 
 			if(bomb_html.get('id') == bombs_class.options.id){
-				bomb_html.setStyle('bottom', bombs_class.moveDown());
+				var old_position = bomb_html.getStyle('bottom');
+				//class_img.setStyle('bottom', bombs_class.moveDown());
+				var new_position = bombs_class.moveDown();
+				addEffect(bomb_html, 'down', old_position, new_position);
 			}
 		});
 	});
@@ -195,6 +225,7 @@ function fireMissile(){
 				left: $('user').getStyle('left').toInt() + 50,
 				bottom: $('user').getStyle('bottom').toInt() + 84,
 				id: "missile" + missile_count,
+				speed: drop_speed,
 		});
 		missile_count++;
 
@@ -203,12 +234,14 @@ function fireMissile(){
 				left: $('user').getStyle('left').toInt() + 32,
 				bottom: $('user').getStyle('bottom').toInt() + 84,
 				id: "missile" + missile_count,
+				speed: drop_speed,
 		});
 
 		missiles["missile" + missile_count + 1] = new Missile({
 				left: $('user').getStyle('left').toInt() + 70,
 				bottom: $('user').getStyle('bottom').toInt() + 84,
 				id: "missile" + missile_count + 1,
+				speed: drop_speed,
 		});
 
 		missile_count += 2;
@@ -217,24 +250,28 @@ function fireMissile(){
 				left: $('user').getStyle('left').toInt() + 6,
 				bottom: $('user').getStyle('bottom').toInt() + 34,
 				id: "missile" + missile_count,
+				speed: drop_speed,
 		});
 
 		missiles["missile" + missile_count + 1] = new Missile({
 				left: $('user').getStyle('left').toInt() + 32,
 				bottom: $('user').getStyle('bottom').toInt() + 84,
 				id: "missile" + missile_count + 1,
+				speed: drop_speed,
 		});
 
 		missiles["missile" + missile_count + 2] = new Missile({
 				left: $('user').getStyle('left').toInt() + 70,
 				bottom: $('user').getStyle('bottom').toInt() + 84,
 				id: "missile" + missile_count + 2,
+				speed: drop_speed,
 		});
 
 		missiles["missile" + missile_count + 3] = new Missile({
 				left: $('user').getStyle('left').toInt() + 95,
 				bottom: $('user').getStyle('bottom').toInt() + 34,
 				id: "missile" + missile_count + 3,
+				speed: drop_speed,
 		});
 
 		missile_count += 4;
@@ -274,7 +311,10 @@ function checkMissiles(){
 
 		Object.each(missiles, function(missiles_class){
 			if(missiles_html.get('id') == missiles_class.options.id){
-				missiles_html.setStyle('bottom', missiles_class.moveUp());
+				var old_position = missiles_html.getStyle('bottom');
+				//missiles_html.setStyle('bottom', missiles_class.moveUp());
+				var new_position = missiles_class.moveUp();
+				addEffect(missiles_html, 'up', old_position, new_position);
 			}
 		});
 	});
@@ -309,7 +349,7 @@ function stopGame(condition){
 	$('user').dispose();
 	delete user;
 
-	$$('.gifts').dispose;
+	$$('.gifts').dispose();
 	gifts = {};
 
 	insertInfo();
@@ -397,6 +437,7 @@ function dropGift(left, bottom){
 			left: left,
 			bottom: bottom,
 			id: 'live' + gift_number,
+			speed: drop_speed,
 		});
 
 		gift_number++;
@@ -407,6 +448,7 @@ function dropGift(left, bottom){
 			id: 'power' + gift_number,
 			type: 'power',
 			image: './img/power.png',
+			speed: drop_speed,
 		});
 
 		gift_number++;
@@ -444,7 +486,30 @@ function checkGifts(){
 			return false;
 		}
 
-		gift_html.setStyle('bottom', gift_object.moveDown());
+		var old_position = gift_html.getStyle('bottom');
+		//gift_html.setStyle('bottom', gift_object.moveDown());
+		var new_position = gift_object.moveDown();
+		addEffect(gift_html, 'down', old_position, new_position);
 	});
 }
 /* End of gifts functionality */
+
+/* Start of animations functionality */
+function addEffect(element, direction, old_position, new_position){
+	var effect = new Fx.Morph(element, {
+	    duration: game_speed,
+	    transition: Fx.Transitions.Sine.easeOut
+	});
+
+	if(direction == 'left' || direction == 'right'){
+		effect.start({
+		    'left': [old_position, new_position],
+		});
+
+	} else if(direction == 'down' || direction =='up'){
+		effect.start({
+		    'bottom': [old_position, new_position],
+		});
+	}
+}
+/* End of animations functionality */

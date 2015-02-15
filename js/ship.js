@@ -7,6 +7,7 @@ var Ship = new Class ({
 		left: 460,
 		bottom: 0,
 		id: "user",
+		speed: 5,
 	},
 
 	initialize : function(options) {
@@ -29,11 +30,11 @@ var Ship = new Class ({
 	},
 
 	moveLeft: function(){
-		return this.options.left -= 5;
+		return this.options.left -= this.options.speed;
 	},
 
 	moveRight: function(){
-		return this.options.left += 5;
+		return this.options.left += this.options.speed;
 	},
 });
 
@@ -48,6 +49,8 @@ var Alien = new Class({
 		bottom: 0,
 		id: "scout",
 		points: 12,
+		drop_speed: 5,
+		speed: 1,
 	},
 
 	initialize : function(options) {
@@ -71,6 +74,6 @@ var Alien = new Class({
 	},
 
 	moveDown: function(){
-		return this.options.bottom -= 10;
+		return this.options.bottom -= this.options.drop_speed;
 	},
 })

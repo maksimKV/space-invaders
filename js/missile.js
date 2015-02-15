@@ -4,6 +4,7 @@ var Bomb = new Class({
 		left: 0,
 		bottom: 0,
 		id: 'bomb',
+		speed: 5,
 	},
 
 	initialize : function(options) {
@@ -27,7 +28,7 @@ var Bomb = new Class({
 	},
 
 	moveDown: function(){
-		return this.options.bottom -= 20;
+		return this.options.bottom -= this.options.speed;
 	},
 });
 
@@ -38,6 +39,7 @@ var Missile = new Class({
 		left: 0,
 		bottom: 0,
 		id: 'missile',
+		speed: 5,
 	},
 
 	initialize : function(options) {
@@ -61,6 +63,6 @@ var Missile = new Class({
 	},
 
 	moveUp: function(){
-		return this.options.bottom += 20;
+		return this.options.bottom += this.options.speed;
 	}
 });

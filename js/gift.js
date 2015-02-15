@@ -6,6 +6,7 @@ var Gift = new Class({
 		id: 'live',
 		image: './img/heart.png',
 		type: 'live',
+		speed: 5,
 	},
 
 	initialize : function(options) {
@@ -29,6 +30,6 @@ var Gift = new Class({
 	},
 
 	moveDown: function(){
-		return this.options.bottom -= 20;
+		return this.options.bottom -= this.options.speed;
 	},
 });
