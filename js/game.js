@@ -321,7 +321,9 @@ function checkMissiles(){
 /* Start of stop functionality */
 function stopGame(condition){
 	if(condition == 'win'){
-		level++;
+		if (level < 10){ 
+			level++; 
+		}
 	} else if (condition == 'lose'){
 		lives--;
 		if(power == 'Advanced'){
