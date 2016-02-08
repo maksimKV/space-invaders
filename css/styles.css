@@ -16,8 +16,9 @@ html, body {
   position: relative;
   display: block;
   min-height: 20px;
+  z-index: 10;
 }
-/* line 22, ../scss/styles.scss */
+/* line 23, ../scss/styles.scss */
 #info p {
   position: relative;
   display: block;
@@ -26,7 +27,7 @@ html, body {
   margin: 10px 0px 0px 20px;
 }
 
-/* line 33, ../scss/styles.scss */
+/* line 34, ../scss/styles.scss */
 #game {
   position: relative;
   display: block;
@@ -34,7 +35,7 @@ html, body {
   height: 650px;
   margin: 0 auto;
 }
-/* line 43, ../scss/styles.scss */
+/* line 44, ../scss/styles.scss */
 #game #message_title {
   color: #fff;
   text-align: center;
@@ -43,7 +44,7 @@ html, body {
   margin: 200px 0px 0px 0px;
   font-size: 64px;
 }
-/* line 54, ../scss/styles.scss */
+/* line 55, ../scss/styles.scss */
 #game #message_subtitle {
   color: #fff;
   text-align: center;
